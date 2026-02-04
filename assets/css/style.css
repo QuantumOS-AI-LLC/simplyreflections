@@ -856,3 +856,9 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+body:not(.is__california) .az__content{
+    display: none !important;
+}
+body.is__california .ca__content{
+    display: none !important;
+}
