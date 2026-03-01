@@ -863,3 +863,24 @@ body.is__california .az__content{
 body:not(.is__california) .ca__content{
     display: none !important;
 }
+
+
+/* new page */
+
+.section_overlay{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 75%;
+    height: 100%;
+    background-color: transparent;
+    background-image: linear-gradient(110deg, #FFFFFF 74%, #F2295B00 70%);
+    opacity: 0.9;
+    transition: background 0.3s, border-radius 0.3s, opacity 0.3s;
+}
+@media(max-width:991.98px){
+    .section_overlay{
+        width: 100%;
+        background: #ffffff;
+    }
+}

@@ -110,3 +110,27 @@ rippleButtons.forEach(button => {
         }, 600);
     });
 });
+
+// review slider
+const review = new Swiper('.review_slider', {
+    loop: true,
+    spaceBetween: 20,
+    speed: 800,
+    slidesPerView: 1,
+
+    autoplay: {
+        delay: 2500,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+    },
+
+
+    breakpoints: {
+        768: {
+            slidesPerView: 2,
+        },
+        1024: {
+            slidesPerView: 3,
+        }
+    }
+});
