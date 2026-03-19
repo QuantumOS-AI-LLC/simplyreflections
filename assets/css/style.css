@@ -884,3 +884,14 @@ body:not(.is__california) .ca__content{
         background: #ffffff;
     }
 }
+
+.check_list li{
+    line-height: 2em;
+}
+.check_list li::before{
+    content: "\f00c";
+    display: inline;
+    margin-right: 0.6em;
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
