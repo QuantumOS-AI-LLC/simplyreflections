@@ -135,39 +135,3 @@ const review = new Swiper('.review_slider', {
         }
     }
 });
-
-
-async function trackEvent(eventName, label) {
-    // Unique ID for deduplication between Pixel and CAPI
-    const eventId = 'simply_' + eventName.toLowerCase() + '_' + Date.now();
-
-    // 1. Trigger Meta Browser Pixel
-    if (typeof fbq !== 'undefined') {
-        fbq('track', eventName, { content_name: label }, { eventID: eventId });
-    }
-
-    // 2. Trigger Vercel Serverless CAPI
-    const vercelEndpoint = "https://simply-reflections-capi.vercel.app/api/track";
-
-    try {
-        await fetch(vercelEndpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                event_name: eventName,
-                event_id: eventId,
-                user_data: {}, 
-                custom_data: { button_label: label },
-                source_url: window.location.href
-            })
-        });
-        console.log(Successfully tracked: ${label});
-    } catch (err) {
-        console.error("CAPI Tracking Failed:", err);
-    }
-}
-
-// Automatically track PageView via CAPI on load
-window.addEventListener('load', () => {
-    trackEvent('PageView', 'Main Landing Page');
-});
