@@ -135,3 +135,39 @@ const review = new Swiper('.review_slider', {
         }
     }
 });
+
+
+// ============================================
+// META CAPI TRACKING — Simply Reflections
+// ============================================
+
+async function trackEvent(eventName, label) {
+    const eventId = 'sr_' + eventName.toLowerCase().replace(/\s/g,'') + '' + Date.now();
+
+    // Browser Pixel
+    if (typeof fbq === 'function') {
+        fbq('track', eventName, { content_name: label }, { eventID: eventId });
+    }
+
+    // Vercel CAPI Server
+    try {
+        await fetch("https://simply-reflections-capi.vercel.app/api/track", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                event_name: eventName,
+                event_id: eventId,
+                user_data: {},
+                custom_data: { button_label: label },
+                source_url: window.location.href
+            })
+        });
+    } catch (err) {
+        console.warn("CAPI:", err.message);
+    }
+}
+
+// PageView auto track
+document.addEventListener('DOMContentLoaded', () => {
+    trackEvent('PageView', 'Landing Page');
+});
