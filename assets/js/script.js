@@ -141,7 +141,16 @@ const review = new Swiper('.review_slider', {
 // META CAPI TRACKING — Simply Reflections
 // ============================================
 
-async function trackEvent(eventName, label) {
+// ---- NEW: Capture Facebook Click ID (fbclid) from Ad URL ----
+// Required to tell Facebook which lead came from which Ad
+function getFBC() {
+    const params = new URLSearchParams(window.location.search);
+    const fbclid = params.get('fbclid');
+    return fbclid ? `fb.1.${Date.now()}.${fbclid}` : null;
+}
+// ---- END NEW ----
+
+function trackEvent(eventName, label) {
     const eventId = 'sr_' + eventName.toLowerCase().replace(/\s/g,'') + '' + Date.now();
 
     // Browser Pixel
@@ -150,21 +159,19 @@ async function trackEvent(eventName, label) {
     }
 
     // Vercel CAPI Server
-    try {
-        await fetch("https://simply-reflections-capi.vercel.app/api/track", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                event_name: eventName,
-                event_id: eventId,
-                user_data: {},
-                custom_data: { button_label: label },
-                source_url: window.location.href
-            })
-        });
-    } catch (err) {
-        console.warn("CAPI:", err.message);
-    }
+    fetch("https://simply-reflections-capi.vercel.app/api/track", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            event_name: eventName,
+            event_id: eventId,
+            user_data: {
+                fbc: getFBC() // ---- NEW: Send Ad Click ID to Facebook via server ----
+            },
+            custom_data: { button_label: label },
+            source_url: window.location.href
+        })
+    }).catch(err => console.warn("CAPI:", err.message));
 }
 
 // PageView auto track
